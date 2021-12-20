@@ -1,0 +1,58 @@
+.display-none {
+    display: none;
+}
+.rerender {
+    display: none;
+}
+.variform-input {
+    width: 100%;
+}
+.variform-input-number {
+    width: 60px;
+    text-align: center;
+    padding-left: 10px;
+}
+input,
+select {
+    font-size: 14px;
+}
+h3, h4 {
+    border-bottom: 1px solid #cccccc;
+}
+h4 {
+    font-size: 100%;
+    margin-top: 8px;
+    margin-bottom: 0px;
+}
+.row [class^="col"] {
+    margin-left: 0px !important;
+    word-break: break-all;
+}
+.mb-14 {
+    margin-bottom: 14px !important;
+}
+.float-right {
+    float: right;
+}
+[class^="variform-input-number-btn"] {
+    font-size: 15px;
+    background-color: #d4d4d4;
+    border-color: #d4d4d4;
+}
+.variform-input-number-btn-left {
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+}
+.variform-input-number-btn-right {
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+}
+[class^="variform-input-number-btn"]:active {
+    border-style: solid;
+    background-color: #c5c3c3;
+}
+
+.error-text {
+    color: red;
+}
+

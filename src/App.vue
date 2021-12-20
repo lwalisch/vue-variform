@@ -1,29 +1,66 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+
+    <variform ref="variform" :form-element-data="form" :validators="validators" :slot-names="['custom']">
+
+      <!-- custom element with name custom -->
+      <template v-slot:custom="slotProps">
+        <custom-element :form-element-data="slotProps.formElementData" />
+      </template>
+
+    </variform>
+
+    <div class="container">
+
+      <div class="row">
+        <button @click="generate">capture data</button>
+        <div>{{outData}}</div>
+      </div>
+
+      <div class="row">
+        <button @click="reset">reset</button>
+      </div>
+
+      <div class="row">
+        <button @click="populate">populate form</button>
+      </div>
+
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import HelloWorld from './components/HelloWorld.vue'
+import { Component, Vue } from 'vue-property-decorator';
+import _ from 'lodash';
+import Variform from './variform/Variform.vue';
+import formTemplate from './testform';
+import validators from './validators';
+import CustomElement from './CustomElement.vue';
 
 @Component({
-  components: {
-    HelloWorld
-  }
+    components: {
+        CustomElement,
+        Variform,
+    },
 })
-export default class App extends Vue {}
-</script>
+export default class App extends Vue {
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+    form = _.cloneDeep(formTemplate)
+
+    validators = validators
+
+    outData = {}
+
+    async generate() {
+        this.outData = await (this.$refs.variform as Variform).generateData(this.form, true);
+    }
+
+    async populate() {
+        await (this.$refs.variform as Variform).populateForm(this.form, this.outData);
+    }
+
+    reset() {
+        this.form = _.cloneDeep(formTemplate);
+    }
 }
-</style>
+</script>
