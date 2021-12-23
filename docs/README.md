@@ -1,8 +1,11 @@
-# vue-variform
+# Vue Variform
 
-Vue.js component to create forms with various possibilities. 
+Vue.js component to create forms with various possibilities.
 
-### Key features
+<b>A more detailed documentation including all functionalities of the library will follow soon.</b>
+
+## Variform Features
+
 - Form templates containing the input fields are defined using a JSON object. This is convenient for storing different form templates in a database and for rendering forms dynamically.
 - It is possible to define a data mapping schema to capture only relevant information of the user input and not the entire JSON object defining the form.
 - Captured data from a form can be used to populate the same or a different form at a later point in time. This feature makes it easy for users to edit the initial data afterwards.
@@ -11,24 +14,21 @@ Vue.js component to create forms with various possibilities.
 - The library offers the possibility to create custom input fields and groups of input fields for completely individual forms. 
 - In terms of design, the variform library uses [simple-grid](https://simplegrid.io/) for positioning the form elements and a very short and simple style.css file that can be easily adapted to fit the design of every application. 
 
-### Demo
-See [here](https://lwalisch.github.io/) for a demo.
+## Getting Started
 
-### Documentation
+First, create a Vue project, for instance with vue-cli. If you have an existing project, skip this step.
+```
+vue create example-project
+cd example-project
+```
 
-The documentation is available [here](https://lwalisch.github.io/variform). 
-
-<b>A more detailed documentation including all functionalities of the library will follow soon.</b>
-
-## Installation
+Then, install the variform component.
 ```
 npm install --save vue-variform
 ```
 
-## Usage
-
 To use the variform component, simply add two import to the `main.js` file. 
-```js
+```js{3-4}
 import Vue from 'vue'
 import App from './App.vue'
 import 'vue-variform'
@@ -87,15 +87,17 @@ export default {
 </script>
 ```
 
-## Project setup for developing the variform library
-```
-npm install
-```
+## Existing Form Elements
+There are different types of input fields available in the library such as text inputs, radio buttons, checkboxes, dropdowns and conditional form elements that reveal further content based on specific inputs. Refer to the [datatypes reference](https://lwalisch.github.io/reference/) to find out how to add these input fields to the form template.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## Create Custom Form elements
+If the library does not contain the required form elements, it is easily possible to add custom elements for your individual needs. More following soon...
 
-## Contributing
-There is still a lot of work to do. Feel free to contact me for suggestions or make a pull request to propose improvements to the library.
+## Data Mapping
+More following soon...
+
+### Converters
+More following soon...
+
+## Validators
+More following soon...

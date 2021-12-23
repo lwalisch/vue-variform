@@ -1,15 +1,3 @@
-interface FormElementData {
-    type: 'input'|'numberInput'|'dropdown'|'headline'|'group'|'date1'|'date2'|'checkboxGroup'|'radioGroup'|'nested'
-        |'nestedConditional'|'nestedConditionalRadio'|'nestedConditionalCheckbox'|'hidden';
-    content: InputContent|DropdownContent|HeadlineContent|GroupContent|NestedFormElementContent
-        |NestedConditionalContent|CheckboxGroupContent|RadioGroupContent|NumberInputContent
-        |HiddenContent|NestedConditionalRadioContent|NestedConditionalCheckboxContent;
-    dataMapping?: DataMapping;
-    validation?: Validation;
-    deletable?: boolean;
-    class? : string;
-}
-
 interface InputContent {
     label: string;
     value: string;
@@ -59,9 +47,11 @@ interface CheckboxGroupContent2 {
     itemLabels?: string[];
     items: string[];
 
-    // the values property is expected to be an object.
-    // the keys should be the same as the values in the items array
-    // and the values are bools indicating if they are selected or not
+    /**
+     * The values property is expected to be an object.
+     * The keys should be the same as the values in the items array
+     * and the values are bools indicating if they are selected or not
+     */
     values: any;
 }
 
@@ -109,12 +99,28 @@ interface NestedConditionalCheckboxContent {
 interface Validation {
     validator: string;
     validationError?: string;
-    validationUpdate: number; // this property should be set to 0 (zero) if validation is used
+
+    /**
+     * this property should be set to 0 (zero) if validation is used
+     */
+    validationUpdate: number;
 }
 
 interface ValidationResponse {
     valid: boolean;
     error?: string;
+}
+
+interface FormElementData {
+    type: 'input'|'numberInput'|'dropdown'|'headline'|'group'|'date1'|'date2'|'checkboxGroup'|'radioGroup'|'nested'
+        |'nestedConditional'|'nestedConditionalRadio'|'nestedConditionalCheckbox'|'hidden';
+    content: InputContent|DropdownContent|HeadlineContent|GroupContent|NestedFormElementContent
+        |NestedConditionalContent|CheckboxGroupContent|RadioGroupContent|NumberInputContent
+        |HiddenContent|NestedConditionalRadioContent|NestedConditionalCheckboxContent;
+    dataMapping?: DataMapping;
+    validation?: Validation;
+    deletable?: boolean;
+    class? : string;
 }
 
 export {
