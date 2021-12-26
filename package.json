@@ -15,7 +15,8 @@
     "build-lib": "vue-cli-service build --target lib --name variform ./src/variform/index.js",
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs",
-    "reference:build": "npx typedoc --out docs/.vuepress/dist/reference src/variform/datatypes.ts"
+    "reference:build": "./build_reference.sh",
+    "variform-docs": "node node_modules/@vuedoc/md/bin/cli.js --output docs/ src/variform/Variform.vue"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.26",
@@ -38,6 +39,8 @@
     "@vue/cli-service": "~4.5.0",
     "@vue/eslint-config-airbnb": "^5.0.2",
     "@vue/eslint-config-typescript": "^7.0.0",
+    "@vuedoc/md": "^3.2.0",
+    "@vuedoc/parser": "^3.4.0",
     "eslint": "^6.7.2",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-vue": "^6.2.2",

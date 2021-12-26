@@ -1,8 +1,13 @@
 module.exports = {
     title: 'Vue Variform',
     description: 'Vue.js component to create forms with various possibilities',
+    markdown: {
+        lineNumbers: true
+    },
     themeConfig: {
         nav: [
+            { text: 'Datatypes Reference', link: 'https://lwalisch.github.io/reference/' },
+            { text: 'Variform Reference', link: './Variform.md' },
             { text: 'GitHub', link: 'https://github.com/lwalisch/vue-variform' },
         ],
         sidebar: [
@@ -10,5 +15,5 @@ module.exports = {
         ],
         displayAllHeaders: true
     },
-    base: 'variform'
+    base: '/variform/'
 }

@@ -27,7 +27,7 @@ Then, install the variform component.
 npm install --save vue-variform
 ```
 
-To use the variform component, simply add two import to the `main.js` file. 
+To use the variform component, simply add two imports to the `main.js` file. 
 ```js{3-4}
 import Vue from 'vue'
 import App from './App.vue'
@@ -47,6 +47,7 @@ After that, a simple form template can be defined in a seperate `form.js` file. 
 export default {
     type: 'group',
     content: {
+        headlineSize: 'h3',
         label: 'form',
         items: [
             {
@@ -86,18 +87,202 @@ export default {
 }
 </script>
 ```
-
+![](./getting_started.png)
 ## Existing Form Elements
-There are different types of input fields available in the library such as text inputs, radio buttons, checkboxes, dropdowns and conditional form elements that reveal further content based on specific inputs. Refer to the [datatypes reference](https://lwalisch.github.io/reference/) to find out how to add these input fields to the form template.
+There are different types of input fields available in the library such as text inputs, radio buttons, checkboxes, dropdowns, groups and conditional form elements that reveal further content based on specific inputs. The [FormElementData](https://lwalisch.github.io/reference/interfaces/FormElementData.html) interface is always the starting point for every input field. Refer to the [datatypes reference](https://lwalisch.github.io/reference/) to find out how to add these input fields to the form template.
 
 ## Create Custom Form elements
-If the library does not contain the required form elements, it is easily possible to add custom elements for your individual needs. More following soon...
+If the library does not contain the required form elements, it is easily possible to add custom elements for your individual needs. Continuing the example from [Getting Started](#getting-started), a custom form element is added for date input using the HTML5 standard date input field. We create a new Vue component called `CustomDate.vue` with the following content.
 
+```vue{3,22}
+<template>
+    <div>
+        <template v-if="formElementData.type === 'customDate'">
+            <div class="col-3">
+                {{formElementData.content.label}}
+            </div>
+            <div class="col-8">
+                <input 
+                    type="date" 
+                    v-model="formElementData.content.value" 
+                    class="variform-input"
+                />
+            </div>
+        </template>
+    </div>
+</template>
+
+<script>
+
+export default {
+    name: 'CustomDate',
+    props: ['formElementData'],
+}
+</script>
+```
+There are only a few rules to consider when creating a custom form element. First of all, the variform component passes a formElementData prop which contains all information to display in the form element. This prop must be defined in a custom form element as shown in line 21. Also make sure that the custom component is only rendered, if the matching type, in this case "customDate", is set in the form template (line 3). 
+
+The new custom date form element is registered in the variform component of `App.vue`.
+```vue{5,7-9,16,21}
+<template>
+  <div id="app">
+    <variform
+      :form-element-data="form"
+      :slot-names="['customDate']"
+    >
+      <template v-slot:customDate="slotProps">
+        <custom-date :form-element-data="slotProps.formElementData" />
+      </template>
+    </variform>
+  </div>
+</template>
+
+<script>
+import form from './form'
+import CustomDate from './CustomDate.vue'
+
+export default {
+  name: 'App',
+  components: {
+    CustomDate,
+  },
+  data: () => ({
+    form
+  }),
+}
+</script>
+```
+
+Let's add an instance of the custom date form element to the form template of `form.js`.
+
+```js{21-27}
+export default {
+    type: 'group',
+    content: {
+        headlineSize: 'h3',
+        label: 'form',
+        items: [
+            {
+                type: 'input',
+                content: {
+                    label: 'input1',
+                    value: '',
+                },
+            },
+            {
+                type: 'input',
+                content: {
+                    label: 'input2',
+                    value: '',
+                },
+            },
+            {
+                type: 'customDate',
+                content: {
+                    label: 'date',
+                    value: '',
+                }
+            },
+        ],
+    },
+}
+```
+![](./custom_element.png)
 ## Data Mapping
-More following soon...
+
+The [DataMapping](https://lwalisch.github.io/variform/reference/interfaces/DataMapping.html) property in a FormElementData object is used to specify which data from a FormElement is exported when submitting the form. The formKeypath property of DataMapping tells variform which data to export from the form element. The externalKeypath property defines the keyPath of the form element's data in the exported object. Let's add dataMapping to the `form.js` form template of our example.
+
+```js{9,17,25}
+export default {
+    type: 'group',
+    content: {
+        headlineSize: 'h3',
+        label: 'form',
+        items: [
+            {
+                type: 'input',
+                dataMapping: { formKeypath: 'content.value', externalKeypath: 'input.first'},
+                content: {
+                    label: 'input1',
+                    value: '',
+                },
+            },
+            {
+                type: 'input',
+                dataMapping: { formKeypath: 'content.value', externalKeypath: 'input.second'},
+                content: {
+                    label: 'input2',
+                    value: '',
+                },
+            },
+            {
+                type: 'customDate',
+                dataMapping: { formKeypath: 'content.value', externalKeypath: 'date'},
+                content: {
+                    label: 'date',
+                    value: '',
+                }
+            },
+        ],
+    },
+}
+```
+In `App.vue` we add a button to execute the function to capture all data that was specified in the DataMapping of the form template.
+```vue{4,12-15,34-36}
+<template>
+  <div id="app">
+    <variform
+      ref="variform"
+      :form-element-data="form"
+      :slot-names="['customDate']"
+    >
+      <template v-slot:customDate="slotProps">
+        <custom-date :form-element-data="slotProps.formElementData" />
+      </template>
+    </variform>
+    <div class="container">
+      <div class="row"><button @click="exportFormData">export</button></div>
+      <div class="row"><p>{{outData}}</p></div>
+    </div>
+    
+  </div>
+</template>
+
+<script>
+import form from './form'
+import CustomDate from './CustomDate.vue'
+
+export default {
+  name: 'App',
+  components: {
+    CustomDate,
+  },
+  data: () => ({
+    form,
+    outData: '',
+  }),
+  methods: {
+    async exportFormData() {
+      this.outData = await this.$refs.variform.generateData(this.form, true);
+    },
+  },
+}
+</script>
+```
+![](./data_mapping.png)
+
+Notice that it is also possible to create nested objects with DataMapping as shown in the output of the exported data. The data of the two input fields are grouped together in a nested object under the key "input" (`{"input": {"first": "hello", "second": "test"}}`). The the generation of form data can be executed with the [generateData](./Variform.md##generatedata) method of the Variform component.
 
 ### Converters
+Data mapping with the formKeypath property is limited when it comes to complex form elements with multiple values. Let's consider an address input line that consists of multiple seperate input fields. The only possibility is to have seperate data mappings for all fields. Converters provide more flexibility. Converter functions can be passed to the variform component and can be invoked using the convertToFormData property of [DataMapping](https://lwalisch.github.io/variform/reference/interfaces/DataMapping.html). The string in convertToFormData must match the name of one of the converter functions passed into the variform component. 
+
+Example following soon...
+
+## Populate Form with extracted Form Data
 More following soon...
 
 ## Validators
+More following soon...
+
+## Extendable lists of Form Elements
 More following soon...

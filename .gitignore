@@ -25,3 +25,4 @@ pnpm-debug.log*
 # vuepress files
 .temp
 .cache
+docs/.vuepress/dist/*
