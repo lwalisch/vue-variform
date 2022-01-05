@@ -113,7 +113,7 @@ export default {
                             type: 'input',
                             deletable: true,
                             dataMapping: { formKeypath: 'content.value', externalKeypath: 'input1' },
-                            validation: { validator: 'validateSocial', validationUpdate: 0 },
+                            validation: { validator: 'validateSocial' },
                             content: {
                                 label: 'inputlabel',
                                 value: '',

@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 interface InputContent {
     label: string;
     value: string;
@@ -100,10 +101,6 @@ interface Validation {
     validator: string;
     validationError?: string;
 
-    /**
-     * this property should be set to 0 (zero) if validation is used
-     */
-    validationUpdate: number;
 }
 
 interface ValidationResponse {

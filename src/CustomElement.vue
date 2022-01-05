@@ -2,7 +2,7 @@
     <div>
         <template v-if="formElementData.type === 'custom'">
             <div class="col-3">
-                {{formElementData.label}}
+                {{formElementData.content.label}}
             </div>
             <div class="col-8">
                 <input type="date" v-model="formElementData.content.value" class="variform-input" />

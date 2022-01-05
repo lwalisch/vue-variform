@@ -22,23 +22,22 @@
                 </div>
 
                 <!-- display all items that belong to the group -->
-                <div class="col-12">
-                    <form-element v-for="(itemData, index) in formElementData.content.items" :key="index"
-                        @delete="deleteChildElement"
-                        :form-element-data="itemData"
-                        :slot-names="slotNames"
-                        :validation-update="'validation' in itemData ? itemData.validation.validationUpdate : 0"
-                    >
-                        <!-- pass custom component slots down to the form elements of the group -->
-                        <template v-for="slotName in slotNames" v-slot:[slotName]="slotProps">
-                            <slot :name="slotName" :form-element-data="slotProps.formElementData"/>
-                        </template>
+                <form-element v-for="(itemData, index) in formElementData.content.items" :key="index"
+                    @delete="deleteChildElement"
+                    :form-element-data="itemData"
+                    :slot-names="slotNames"
+                    :validation-update="'validation' in itemData ? itemData.validation.validationUpdate : 0"
+                >
+                    <!-- pass custom component slots down to the form elements of the group -->
+                    <template v-for="slotName in slotNames" v-slot:[slotName]="slotProps">
+                        <slot :name="slotName" :form-element-data="slotProps.formElementData"/>
+                    </template>
 
-                    </form-element>
-                    <div v-if="'actionAddElement' in formElementData.content">
-                        <button type="success" @click="addElementToGroup(formElementData)">+</button>
-                    </div>
+                </form-element>
+                <div v-if="'actionAddElement' in formElementData.content">
+                    <button type="success" @click="addElementToGroup(formElementData)">+</button>
                 </div>
+
             </template>
             <template v-if="formElementData.type == 'input'">
                 <div class="col-3">{{formElementData.content.label}}</div>

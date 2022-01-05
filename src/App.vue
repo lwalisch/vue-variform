@@ -1,7 +1,7 @@
 <template>
   <div id="app">
 
-    <variform ref="variform" :form-element-data="form" :validators="validators" :slot-names="['custom']">
+    <variform ref="variform" :form-element-data="form" :validators="validators" :converters="converters" :slot-names="['custom']">
 
       <!-- custom element with name custom -->
       <template v-slot:custom="slotProps">
@@ -33,8 +33,9 @@
 import { Component, Vue } from 'vue-property-decorator';
 import _ from 'lodash';
 import Variform from './variform/Variform.vue';
-import formTemplate from './testform';
+import formTemplate from './form';
 import validators from './validators';
+import converters from './converters';
 import CustomElement from './CustomElement.vue';
 
 @Component({
@@ -49,10 +50,12 @@ export default class App extends Vue {
 
     validators = validators
 
+    converters = converters
+
     outData = {}
 
     async generate() {
-        this.outData = await (this.$refs.variform as Variform).generateData(this.form, true);
+        this.outData = await (this.$refs.variform as Variform).generateData(this.form);
     }
 
     async populate() {

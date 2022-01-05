@@ -1,29 +1,22 @@
 import _ from 'lodash';
 import {
-    FormElementData, DropdownContent, GroupContent,
+    FormElementData, InputContent,
 } from './variform/datatypes';
 
-async function populateCountryCodes(formElementTemplate: DropdownContent, extData: any) {
-    const content = formElementTemplate;
-
-    // consider that extData may be not present in the parsed data, then set a default value
-    if (extData === null) {
-        content.value = '';
-    } else {
-        content.value = extData;
-    }
-    const rawResponse = await fetch('http://localhost:3000/countryCodes');
-    const response = await rawResponse.json();
-    content.itemLabels = response.deLabels;
-    content.items = response.codes;
-    return content;
+function extendGroupToForm(formElementTemplate: FormElementData[], extData: any) {
+    (formElementTemplate[0].content as InputContent).value = extData.extendGroupInput;
+    (formElementTemplate[1].content as any).value = extData.extendGroupDate;
+    return formElementTemplate;
 }
 
-function converteToExtCountry(content: DropdownContent) {
-    return content.value;
+function extendGroupToExternal(groupItems: FormElementData[]) {
+    return {
+        extendGroupInput: (groupItems[0].content as InputContent).value,
+        extendGroupDate: (groupItems[1].content as any).value,
+    };
 }
 
 export default {
-    populateCountryCodes,
-    converteToExtCountry,
+    extendGroupToExternal,
+    extendGroupToForm,
 };

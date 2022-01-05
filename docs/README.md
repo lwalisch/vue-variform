@@ -263,7 +263,7 @@ export default {
   }),
   methods: {
     async exportFormData() {
-      this.outData = await this.$refs.variform.generateData(this.form, true);
+      this.outData = await this.$refs.variform.generateData(this.form);
     },
   },
 }
@@ -276,13 +276,18 @@ Notice that it is also possible to create nested objects with DataMapping as sho
 ### Converters
 Data mapping with the formKeypath property is limited when it comes to complex form elements with multiple values. Let's consider an address input line that consists of multiple seperate input fields. The only possibility is to have seperate data mappings for all fields. Converters provide more flexibility. Converter functions can be passed to the variform component and can be invoked using the convertToFormData property of [DataMapping](https://lwalisch.github.io/variform/reference/interfaces/DataMapping.html). The string in convertToFormData must match the name of one of the converter functions passed into the variform component. 
 
-Example following soon...
+The [example](https://lwalisch.github.io/) uses converters for the extendable list of form elements at the bottom of the form. Refer to the [Example Source Code](https://github.com/lwalisch/vue-variform/tree/master/src) to see how this is implemented.
 
 ## Populate Form with extracted Form Data
-More following soon...
+It is possible to populate a given form with data that was previously extracted from a form using the [populateForm](./Variform.md##populateForm) method of the Variform component. This method can be seen as the inverse process of [generateData](./Variform.md##generatedata). 
 
 ## Validators
-More following soon...
+Validators are functions passed into the Variform component and for every form element, it is possible to specify in the form template, that a validator function is executed to validate the content of the form element. The [validation](https://lwalisch.github.io/variform/reference/interfaces/FormElementData.html#validation) field of formElementData is used to specify the name of the function that should be executed for the validation process. If the validation of a form element finds an error, the error message is printed below the form elmement.
+
+The [example](https://lwalisch.github.io/) uses validation in the first text input field. Refer to the [Example Source Code](https://github.com/lwalisch/vue-variform/tree/master/src) to see how this is implemented.
 
 ## Extendable lists of Form Elements
+
+The [example](https://lwalisch.github.io/) shows an extendable list of form elements at the bottom of the form. Refer to the [Example Source Code](https://github.com/lwalisch/vue-variform/tree/master/src) to see how this is implemented.
+
 More following soon...

@@ -52,9 +52,15 @@ export default class App extends Vue {
     @Prop()
     validators!: {[key: string]: Function}
 
-    // use the information from the dataMapping field in FormElementData to create a formatted output
-    // of the content captured in the application form
-    async generateData(formElementData: FormElementData, isRoot = false) {
+    /**
+     * Use the information from the dataMapping fields in FormElementData to create a formatted output
+     * of the content captured in the application form.
+     * @param formElementData The formElementData containing the data entered by the user
+     * @param isRoot This is not meant to be changed, as it is used internally
+     * for recursive execution of this method
+     * @returns JS object with user data contained in the form as specified in the dataMapping fields in formElementData
+     */
+    async generateData(formElementData: FormElementData, isRoot = true): Promise<object> {
         if (isRoot) {
             this.outData = {};
         }
@@ -118,14 +124,14 @@ export default class App extends Vue {
         if (formElementData.type === 'group') {
             const groupContent = formElementData.content as GroupContent;
             for (let i = 0; i < groupContent.items.length; ++i) {
-                await this.generateData(groupContent.items[i]);
+                await this.generateData(groupContent.items[i], false);
             }
         }
 
         if (formElementData.type === 'nested') {
             const nestedContent = formElementData.content as NestedFormElementContent;
             for (const child of nestedContent.children) {
-                await this.generateData(child);
+                await this.generateData(child, false);
             }
         }
 
@@ -136,7 +142,7 @@ export default class App extends Vue {
             for (const conditionalChildren of nestedConditionalContent.conditions) {
                 if (conditionalChildren.condition === nestedConditionalContent.dropdownContent.value) {
                     for (const child of conditionalChildren.children) {
-                        await this.generateData(child);
+                        await this.generateData(child, false);
                     }
                 }
             }
@@ -149,7 +155,7 @@ export default class App extends Vue {
             for (const conditionalChildren of nestedConditionalContent.conditions) {
                 if (conditionalChildren.condition === nestedConditionalContent.radioGroupContent.value) {
                     for (const child of conditionalChildren.children) {
-                        await this.generateData(child);
+                        await this.generateData(child, false);
                     }
                 }
             }
@@ -163,7 +169,7 @@ export default class App extends Vue {
                 if (conditionalChildren.condition in nestedConditionalContent.checkboxGroupContent.values
                     && nestedConditionalContent.checkboxGroupContent.values[conditionalChildren.condition] === true) {
                     for (const child of conditionalChildren.children) {
-                        await this.generateData(child);
+                        await this.generateData(child, false);
                     }
                 }
             }
@@ -171,10 +177,12 @@ export default class App extends Vue {
         return this.outData;
     }
 
-    // use the information from the dataMapping field in FormElementData to populate
-    // the formElements with data from the db
-    // inData is the generated data obtained from the generateData method
-    // formElementData expects the INITIAL forrmElementData, not the formElement data in the state where generateData was executed
+    /**
+     * Populate the current form with data that was generated before using the data provided in inData. The dataMapping field in formElementData is used to map the data of inData to the form.
+     * @param formElementData to be populated with data from inData
+     * @param inData expects an object that was generated with the generateData method
+     * @returns the populated formElementData
+     */
     async populateForm(formElementData: FormElementData, inData: any) {
         if ('dataMapping' in formElementData && formElementData.dataMapping) {
             let itemValue = _.get(inData, formElementData.dataMapping.externalKeypath, null);
