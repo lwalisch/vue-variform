@@ -89,7 +89,7 @@ export default {
 ```
 ![](./getting_started.png)
 ## Existing Form Elements
-There are different types of input fields available in the library such as text inputs, radio buttons, checkboxes, dropdowns, groups and conditional form elements that reveal further content based on specific inputs. The [FormElementData](https://lwalisch.github.io/reference/interfaces/FormElementData.html) interface is always the starting point for every input field. Refer to the [datatypes reference](https://lwalisch.github.io/reference/) to find out how to add these input fields to the form template.
+There are different types of input fields available in the library such as text inputs, radio buttons, checkboxes, dropdowns, groups and conditional form elements that reveal further content based on specific inputs. The [FormElementData](https://lwalisch.github.io/variform/reference/interfaces/FormElementData.html) interface is always the starting point for every input field. Refer to the [datatypes reference](https://lwalisch.github.io/variform/reference/) to find out how to add these input fields to the form template.
 
 ## Create Custom Form elements
 If the library does not contain the required form elements, it is easily possible to add custom elements for your individual needs. Continuing the example from [Getting Started](#getting-started), a custom form element is added for date input using the HTML5 standard date input field. We create a new Vue component called `CustomDate.vue` with the following content.
@@ -273,21 +273,82 @@ export default {
 
 Notice that it is also possible to create nested objects with DataMapping as shown in the output of the exported data. The data of the two input fields are grouped together in a nested object under the key "input" (`{"input": {"first": "hello", "second": "test"}}`). The the generation of form data can be executed with the [generateData](./Variform.md##generatedata) method of the Variform component.
 
-### Converters
+### Converters - Advanced Data Mapping
 Data mapping with the formKeypath property is limited when it comes to complex form elements with multiple values. Let's consider an address input line that consists of multiple seperate input fields. The only possibility is to have seperate data mappings for all fields. Converters provide more flexibility. Converter functions can be passed to the variform component and can be invoked using the convertToFormData property of [DataMapping](https://lwalisch.github.io/variform/reference/interfaces/DataMapping.html). The string in convertToFormData must match the name of one of the converter functions passed into the variform component. 
 
-The [example](https://lwalisch.github.io/) uses converters for the extendable list of form elements at the bottom of the form. Refer to the [Example Source Code](https://github.com/lwalisch/vue-variform/tree/master/src) to see how this is implemented.
+The [official example](https://lwalisch.github.io/) uses converters for the extendable list of form elements at the bottom of the form. Refer to the [Example Source Code](https://github.com/lwalisch/vue-variform/tree/master/src) to see how this is implemented.
 
 ## Populate Form with extracted Form Data
-It is possible to populate a given form with data that was previously extracted from a form using the [populateForm](./Variform.md##populateForm) method of the Variform component. This method can be seen as the inverse process of [generateData](./Variform.md##generatedata). 
+It is possible to populate a given form with data that was previously extracted from a form using the [populateForm](./Variform.md##populateForm) method of the Variform component. This method can be seen as the inverse process of [generateData](./Variform.md##generatedata). Just to show how this feature works, we are going to add this functionality to our example form from above. First we install the lodash library, as we will require some functionality from it.
+
+```
+npm install --save lodash
+```
+
+Next we will slightly modify the `App.vue` component to display two additional buttons 'reset' and 'populate'. Also, two new methods 'reset' and 'populate' are added to be executed, when the corresponding buttons are clicked. The changes to the code are marginally. See the marked lines for all important changes that have been made compared to before.
+
+```vue{15,16,25,34,41-46}
+<template>
+  <div id="app">
+    <variform
+      ref="variform"
+      :form-element-data="form"
+      :slot-names="['customDate']"
+    >
+      <template v-slot:customDate="slotProps">
+        <custom-date :form-element-data="slotProps.formElementData" />
+      </template>
+    </variform>
+    <div class="container">
+      <div class="row"><button @click="exportFormData">export</button></div>
+      <div class="row"><p>{{outData}}</p></div>
+      <div class="row"><button @click="reset">reset</button></div>
+      <div class="row"><button @click="populate">populate</button></div>
+    </div>
+    
+    
+  </div>
+</template>
+
+<script>
+import formTemplate from './form'
+import _ from 'lodash'
+import CustomDate from './CustomDate.vue'
+
+export default {
+  name: 'App',
+  components: {
+    CustomDate,
+  },
+  data: () => ({
+    form: _.cloneDeep(formTemplate),
+    outData: '',
+  }),
+  methods: {
+    async exportFormData() {
+      this.outData = await this.$refs.variform.generateData(this.form);
+    },
+    async populate() {
+      await this.$refs.variform.populateForm(this.form, this.outData);
+    },
+    reset() {
+      this.form = _.cloneDeep(formTemplate);
+    }
+  },
+}
+</script>
+```
+![](./populate_form.gif)
+
+We can now enter some values, then reset the complete form. Since the exported data is still available in the outData property of `App.vue`, the form state can be recovered by pressing the populate button.
 
 ## Validators
 Validators are functions passed into the Variform component and for every form element, it is possible to specify in the form template, that a validator function is executed to validate the content of the form element. The [validation](https://lwalisch.github.io/variform/reference/interfaces/FormElementData.html#validation) field of formElementData is used to specify the name of the function that should be executed for the validation process. If the validation of a form element finds an error, the error message is printed below the form elmement.
 
-The [example](https://lwalisch.github.io/) uses validation in the first text input field. Refer to the [Example Source Code](https://github.com/lwalisch/vue-variform/tree/master/src) to see how this is implemented.
+The [official example](https://lwalisch.github.io/) uses validation in the first text input field. Refer to the [Example Source Code](https://github.com/lwalisch/vue-variform/tree/master/src) to see how this is implemented.
 
 ## Extendable lists of Form Elements
 
-The [example](https://lwalisch.github.io/) shows an extendable list of form elements at the bottom of the form. Refer to the [Example Source Code](https://github.com/lwalisch/vue-variform/tree/master/src) to see how this is implemented.
+The [official example](https://lwalisch.github.io/) shows an extendable list of form elements at the bottom of the form. Refer to the [Example Source Code](https://github.com/lwalisch/vue-variform/tree/master/src) to see how this is implemented.
 
 More following soon...

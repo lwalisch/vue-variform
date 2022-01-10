@@ -6,7 +6,7 @@ module.exports = {
     },
     themeConfig: {
         nav: [
-            { text: 'Datatypes Reference', link: 'https://lwalisch.github.io/reference/' },
+            { text: 'Datatypes Reference', link: 'https://lwalisch.github.io/variform/reference/' },
             { text: 'Variform Reference', link: './Variform.md' },
             { text: 'GitHub', link: 'https://github.com/lwalisch/vue-variform' },
         ],
